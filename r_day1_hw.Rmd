@@ -1,0 +1,55 @@
+---
+title: "r day 1 nb"
+output: html_notebook
+---
+
+## Homework
+
+1.  Create an array of two 3x3 matrices from the given vectors.
+
+    ```{r}
+    vec1 <- c(1, 2, 3, 4, 5, 6, 7, 8, 9) 
+    vec2 <- c(10, 11, 12, 13, 14, 15, 16, 17, 18) 
+    mat1 <- matrix(vec1, nrow = 3) 
+    mat2 <- matrix(vec2, nrow = 3) 
+    mat_array <- array(c(mat1, mat2), dim = c(3, 3, 2)) 
+    print(mat_array)
+    ```
+
+2.  In the above matrix that you created, print the value 5 by indexing in to the matrix.
+
+    ```{r}
+    value <- mat_array[2,2,1] 
+    print(value)
+    ```
+
+3.  Print the third row of the first matrix.
+
+    ```{r}
+    row_3 <- mat_array[3,,1] 
+    print(row_3)
+    ```
+
+4.  Print the second column of both matrices.
+
+    ```{r}
+    m1c2 <- mat_array[,2,1] 
+    m2c2 <- mat_array[,2,2] 
+    print(m1c2) 
+    print(m2c2)
+    ```
+
+5.  Create two strings with your first and last name, respectively. Then concatenate them, and print the new value as "My name is \<your newly created concatenated variable will go here\>"
+
+    ```{r}
+    first_name <- 'Vaidic' 
+    last_name <- 'Trivedi' 
+    full_name <- paste(first_name, last_name) 
+    sprintf('My name is %s',full_name)
+    ```
+
+6.  What values can a BOOLEAN contain?
+
+    ```{r}
+    print('BOOL type values include: TRUE and FALSE')
+    ```
