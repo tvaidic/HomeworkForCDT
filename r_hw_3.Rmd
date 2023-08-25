@@ -1,0 +1,76 @@
+---
+title: "R: Homework day 3"
+output: html_notebook
+---
+
+### Imports:
+
+```{r}
+#importing the dataset
+df<- read.csv('C:/Users/User/Documents/Bonfire/Homework/Call of Duty Reviews.csv')
+#creating a tibble from the dataset
+df_tib<- as_tibble(df)
+
+```
+
+### Cleaning:
+
+#### \* Rename columns
+
+#### \* Remove na vals
+
+#### \* engineer new columns
+
+```{r}
+#changing the column names to fit the proper format
+
+colnames(df_tib)<- tolower(gsub("\\.","_", colnames(df_tib)))
+
+#searching for Null values in order to decide what to do with them
+
+na_tib<- colSums(is.na(df_tib))
+
+#Since there are only a few Na values we will drop them
+
+df_tib[df_tib == '']<-NA
+df_tib_nona<- na.omit(df_tib)
+df_tib_nona$release_year<-as.integer(df_tib_nona$release_year)
+
+#next lets create a new column that states if the game was good bad or okay base on the score, to do this we will take the score if the rating was 5 or more above the score then it recieves a "good" if it is 5 or less than the avg score then it recieves a "bad", otherwise it recieves an "okay"
+#checking the avg score
+
+avg_socre <- mean(df_tib_nona$metascore)
+#creating a new column
+df_tib_nona<- df_tib_nona %>%
+  mutate(game_category = case_when(
+    metascore >= (avg_score + 5)~ "good",
+                    metascore <= (avg_score - 5)~ "bad", 
+                    TRUE~"okay"))
+
+```
+
+### Generating a hypothesis:
+
+##### \* Ha: The avg rating goes down over the course of time
+
+##### \* Ho: the avg rating does not go down over time
+
+```{r}
+#lets use charts to map out the data and text our hypothesis
+ggplot(df_tib_nona, aes(x=release_year,y=metascore))+
+  geom_point()
+```
+
+```{r}
+#now lets use a t_test to test our hypothesis
+cor_result <- cor.test (df_tib_nona$release_year, df_tib_nona$metascore)
+cor_result
+```
+
+```{r}
+#based on our correlation test and looking at our p- value, because it is above .05 , we can see that there isnt strong eveidence to reject the null hypothesis. thus there is no statistically significant correlation between the release year and metascore. This is also supported by the confidnece interval. Because the confidence interval includes 0 it indicates the correlation may even be non-existent
+```
+
+```{r}
+
+```
