@@ -1,0 +1,189 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+### Homework
+
+1.  Do 5 CodeWars problems in R. Share your solutions here:
+
+    ```{r}
+    # Problem 1 I solved in R:In this simple assignment you are given a number and have to make it negative. But maybe the number is already negative?
+    # Write the solution
+    make_negative <- function(num){
+      if (num <= 0) {
+        return (num) 
+      } else {
+        return (num*-1)
+      }
+    }
+    # Problem 2:Given a random non-negative number, you have to return the digits of this number within an array in reverse order.
+    #solution2:
+    digitize <- function(n){
+     if (n == 0) {
+       return(c(0))
+     }
+     digs<- numeric(0)
+     while (n>0){
+       dig <-n%% 10
+       digs<- c(digs,dig)
+       n<-n%/%10
+     }
+     return((digs))
+    }
+    # Problem 3:This program tests the life of an evaporator containing a gas.
+    #We know the content of the evaporator (content in ml), the percentage of foam or gas lost every day (evap_per_day) and the threshold (threshold) in percentage beyond which the evaporator is no longer useful. All numbers are strictly positive.
+    #The program reports the nth day (as an integer) on which the evaporator will be out of use.
+    #solution3:
+    evaporator <- function(content, evap_per_day, threshold) {
+      day<-0
+      remaining_content<-100
+      while(remaining_content>threshold) {
+        remaining_content <-remaining_content-(remaining_content * (evap_per_day/100))
+        day<-day+1
+      }
+      return(day)
+    }
+    # problem4:If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.Finish the solution so that it returns the sum of all the multiples of 3 or 5 below the number passed in. Additionally, if the number is negative, return 0 (for languages that do have them).
+
+    solution <- function(number){
+      if (number<0) {
+        return(0)
+      }
+      multiples<- numeric(0)
+      for (i in 1:(number-1)){
+        if (i%%3==0 || i%%5==0){
+          multiples<-c(multiples,i)
+        }
+      }
+      return(sum(multiples))
+    }
+    #problem 5: Johnny is a farmer and he annually holds a beet farmers convention "Drop the beet".Every year he takes photos of farmers handshaking. Johnny knows that no two farmers handshake more than once. He also knows that some of the possible handshake combinations may not happen.However, Johnny would like to know the minimal amount of people that participated this year just by counting all the handshakes.Help Johnny by writing a function, that takes the amount of handshakes and returns the minimal amount of people needed to perform these handshakes (a pair of farmers handshake only once).
+    #soulution:
+    get_participants <- function(handshakes){
+     participants <- 0
+     total_handshakes <- 0
+      
+      while (total_handshakes < handshakes) {
+        participants <- participants + 1
+        total_handshakes <- total_handshakes + participants - 1
+      }
+      
+      return(participants)
+    }
+    ```
+
+2.  Create a function that checks an input of type `int` and returns
+    fizz if the number is a multiple of 3, buzz if the number is a
+    multiple of 5, and fizzbuzz if the number is a multiple of 3 and 5.
+
+    ```{r}
+    multiples <-function(num) {
+      if (num %% 3 == 0 && num %% 5 == 0) {
+        return('fizzbuzz')
+      } else if (num%%3==0){
+        return('fizz')
+      } else if (num%%5==0){
+        return('buzz')
+      } else {
+        return(as.character(num))
+      }
+    }
+    multiples(6)
+    multiples(30)
+    multiples(7)
+    multiples(10)
+    ```
+
+3.  **Mario Challenge:** In the classic Super Mario games, Mario ends
+    each level by ascending a flight of stairs and leaping off the top
+    to arrive at the castle at the end. (See
+    [here](https://youtu.be/-avspZlbOWU?t=55) for details). We can
+    imagine that each of the bricks of the stairs is a character X.
+    Create a function that prints out a set of stairs. For example:
+
+    If the function is called marioStairs() and we pass in the value 4,
+    we would expect to see stairs with a length of 4 and a height of 4:
+
+    X
+
+    XX
+
+    XXX
+
+    XXXX
+
+    ```{r echo=FALSE}
+    # You may feel more comfortable figuring this out in Python first, then translating into R later.
+    #solved in python:
+    #def mario_stairs(height):
+        #for i in range(1, height + 1):
+            #print('X' * i)
+    #solving in r
+    mario_stairs<- function(h){
+      for(i in 1:h) {
+        cat(strrep('X', i),'\n')
+      }
+    }
+    mario_stairs(4)
+    mario_stairs(4)
+    ```
+
+4.  Find a built-in dataset you would like to explore. Explore the
+    dataset and use the cheat sheet you built in Week 1 to label
+    continuous and discrete data. Analyze the dataset using dplyr,
+    create graphs, mutate two columns, and formulate a hypothesis about
+    your data.
+
+#### **Data Types:**
+
+-   Column 1: Data Type
+
+-   Column 2: Data Type
+
+```{r}
+data()
+# Today im looking at the msleep data set wich is a dataset that is the data of a study of sleep schedules of mammals
+# I'm starting by observing the data and through observation i am making the hypthesis that carnivores have the hightest sleep to awake ratio through the day
+```
+
+```{r}
+#first lets look at the data
+library(ggplot2)
+library(tidyverse)
+msleep
+#lets look at the different types of data
+# the columns in the data set and the type of data (continuous or discrete) are as follows: name(discrete), genus(discrete), vore(discrete), order(discrete), conservation(discrete), sleep total(continuous), sleep rem(continuous), sleep cycle(continuous), awake(continuous), brain weight(continuous), body weight(contiuous)
+
+
+```
+
+```{r}
+msleep
+#next lets make a new columns and analyze the dataset:
+sleep_calc <- msleep %>%
+  mutate(sleep_ratio = awake / sleep_total,
+         brain_to_body = brainwt/bodywt)
+by_vore<- msleep %>%
+  group_by(vore)
+summary_tibble<- by_vore %>%
+  summarise(mean_sleep = mean(sleep_total, na.rm=TRUE))
+View(summary_tibble)
+```
+
+```{r}
+#now lets plot our data
+pie <- summary_tibble %>%
+  ggplot(aes(x ='', y= mean_sleep,fill=vore)) +
+  geom_bar(stat = 'identity') +
+  coord_polar(theta='y')+
+  labs(title = 'AVG sleep duration by dietary category')
+print(pie)
+```
+
+```{r}
+# upon making our chart we can see that the average sleep looks about the same accross all dietary category suggesting that diet does not play a role in how much sleep is needed in a day
+```
